@@ -2,34 +2,38 @@ using Library_Management_System.Models;
 using Library_Management_System.Repositories;
 using Library_Management_System.Services;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 
-// Register the DbContext with the connection string from appsettings.json.
+//  DbContext
 builder.Services.AddDbContext<BookContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Register Repositories
-builder.Services.AddScoped<IBookRepository, BookRepository>();
 
-// Register Services
+builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IBookService, BookService>();
 
-// Configure Swagger for API documentation (Optional)
+// Swagger 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 
-// Enable Swagger if needed
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    System.Diagnostics.Process.Start(new ProcessStartInfo
+    {
+        FileName = "http://localhost:7251/swagger/index.html",
+        UseShellExecute = true
+    });
+
 }
 
 // Enable HTTPS Redirection (Optional based on your environment)
