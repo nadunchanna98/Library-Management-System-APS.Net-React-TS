@@ -6,6 +6,17 @@ using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 builder.Services.AddControllers();
 
 //  DbContext
@@ -35,6 +46,8 @@ if (app.Environment.IsDevelopment())
     });
 
 }
+
+app.UseCors("AllowReactApp");
 
 // Enable HTTPS Redirection (Optional based on your environment)
 app.UseHttpsRedirection();

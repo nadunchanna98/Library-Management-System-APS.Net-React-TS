@@ -1,0 +1,75 @@
+.table-container {
+  width: 90%;
+  margin: 2rem auto;
+  overflow-x: auto;
+}
+
+.books-table {
+  width: 100%;
+  border-collapse: collapse;
+  
+}
+
+.books-table th, .books-table td {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  text-align:left;
+}
+
+.books-table th {
+  background-color: #17a4cf;
+  color: white;
+  font-weight: bold;
+}
+
+.books-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.books-table tr:hover {
+  background-color: #c0dbfd;
+}
+
+.books-table td {
+  color: #333333; 
+}
+
+.edit-button{
+  background-color: #17cf79;
+  color: white;
+  padding: 2px 6px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  
+  
+}
+.delete-button {
+  background-color: #fd4b4b;
+  color: white;
+  padding: 2px 6px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.more-button {
+  /* background-color: #17a4cf; */
+  color: #17a4cf;
+  padding: 2px 6px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight:500;
+}
+
+.edit-button:hover, .delete-button:hover {
+  background-color: #60A5FA;
+}
+
+.more-button:hover {
+  color: #0f4657;
+}
