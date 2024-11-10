@@ -49,10 +49,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowReactApp");
 
-// Enable HTTPS Redirection (Optional based on your environment)
+// Enable HTTPS Redirection
 app.UseHttpsRedirection();
 
-// Map controllers
 app.MapControllers();
 
 app.Run();
