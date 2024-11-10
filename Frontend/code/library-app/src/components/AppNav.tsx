@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -8,10 +8,9 @@ import BookList from '../pages/BookList';
 import EditBook from '../pages/EditBook';
 import NotFound from '../pages/NotFound';
 
-const AppNav = () => {
-
+const AppNav: FC = () => {
   return (
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen">
       <Navbar />
       <div className="flex-1">
         <Routes>
@@ -28,8 +27,3 @@ const AppNav = () => {
 };
 
 export default AppNav;
-
-
-
-
-

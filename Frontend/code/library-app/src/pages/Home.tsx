@@ -4,12 +4,18 @@ import { useAuth } from '../context/AuthContext';
 import '../pages/Home.css';
 import Slider from 'react-slick';
 
-const Home = () => {
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  description: string;
+}
 
+const Home: React.FC = () => {
   const { books } = useAuth();
 
   useEffect(() => {
-
+    console.log(books)
   }, [books]);
 
   const settings = {
@@ -25,7 +31,6 @@ const Home = () => {
       { breakpoint: 600, settings: { slidesToShow: 1 } },
     ],
   };
-
 
   return (
     <div>
@@ -44,23 +49,21 @@ const Home = () => {
         </div>
       </section>
 
-
       <section className="carousel-section">
         <h2 className="shine sub-topic">Just In: New Titles to Explore</h2>
         <div className="carousel-container">
           <Slider {...settings}>
-            {books.map((book) => (
-              <div key={book.id} className="">
-                <div className='carousel-card-detail'>
+            {books.map((book: Book) => (
+              <div key={book.id}>
+                <div className="carousel-card-detail">
                   <h3 className="book-title">{book.title}</h3>
                   <p className="book-author">by {book.author}</p>
-                  <p className="book-author">by {book.description}</p>
+                  <p className="book-description">{book.description}</p>
                 </div>
               </div>
             ))}
           </Slider>
         </div>
-
       </section>
     </div>
   );

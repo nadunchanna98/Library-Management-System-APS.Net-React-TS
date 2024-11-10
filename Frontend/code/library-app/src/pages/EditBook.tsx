@@ -1,52 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useAuth } from '../context/AuthContext';
 import * as Yup from 'yup';
 import '../pages/AddnewBook.css';
 import api from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
-const AddnewBook = () => {
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    description: string;
+}
 
+interface FormValues {
+    book_name: string;
+    author: string;
+    description: string;
+}
+
+const EditBook: React.FC = () => {
     const navigate = useNavigate();
+    const { books } = useAuth();
+    const { id } = useParams<{ id: string }>(); 
+    const [book, setBook] = useState<Book | null>(null);
+
+    useEffect(() => {
+        const fetchBookDetails = () => {
+            const foundBook = books.find((book) => book.id === (id ? parseInt(id) : NaN));
+            setBook(foundBook || null); 
+        };
+
+        fetchBookDetails();
+    }, [id, books]);
 
     const validationSchema = Yup.object({
-        book_name: Yup.string().max(200, 'Max 200 characters').required('Listing name is required'),
-        author: Yup.string().max(200, 'Max 200 characters').required('author name is required'),
+        book_name: Yup.string().max(200, 'Max 200 characters').required('Book name is required'),
+        author: Yup.string().max(200, 'Max 200 characters').required('Author name is required'),
         description: Yup.string().max(5000, 'Max 5000 characters').required('Description is required'),
     });
 
-    const submitFormData = async (values) => {
-
+    const submitFormData = async (values: FormValues) => {
         try {
-            const response = await api.post('/', {
+            await api.put(`/${id}`, {
+                id: id,
                 title: values.book_name,
                 author: values.author,
                 description: values.description,
             });
 
-            alert('Book added successfully!');
+            alert('Book Updated successfully!');
             navigate('/book_list');
-
         } catch (error) {
-            console.error('Error submitting form data:', error.response?.data || error.message);
+            console.error('Error submitting form data:');
             alert('Error submitting form data.');
         }
     };
+
+    if (!book) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="add-book-container">
             <Formik
                 initialValues={{
-                    book_name: '',
-                    author: '',
-                    description: '',
+                    book_name: book.title,
+                    author: book.author,
+                    description: book.description,
                 }}
                 validationSchema={validationSchema}
-                onSubmit={(values) => submitFormData({ ...values })}
+                onSubmit={(values) => submitFormData(values)}
             >
                 {() => (
                     <Form className="add-book-form">
-                        <div className="shine add-book-header"><p>Add New Book</p></div>
+                        <div className="shine add-book-header"><p>Edit Book</p></div>
 
                         <div className="row-field">
                             <label className="add-book-label">Book Title</label>
@@ -72,10 +101,8 @@ const AddnewBook = () => {
                             </div>
                         </div>
 
-                        <div className="add-new-btn ">
-                            <button type="submit" className="add-book-submit-button">
-                                Add New
-                            </button>
+                        <div className="add-new-btn">
+                            <button type="submit" className="add-book-submit-button">Update</button>
                         </div>
                     </Form>
                 )}
@@ -84,4 +111,4 @@ const AddnewBook = () => {
     );
 };
 
-export default AddnewBook;
+export default EditBook;

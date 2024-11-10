@@ -1,72 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useAuth } from '../context/AuthContext';
 import * as Yup from 'yup';
 import '../pages/AddnewBook.css';
 import api from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 
-const EditBook = () => {
+interface FormValues {
+    book_name: string;
+    author: string;
+    description: string;
+}
 
+const AddnewBook: React.FC = () => {
     const navigate = useNavigate();
-    const { books } = useAuth();
-    const { id } = useParams();
-    const [book, setBook] = useState(null);
-
-    useEffect(() => {
-        const fetchBookDetails = () => {
-            const foundBook = books.find((book) => book.id === parseInt(id));
-            setBook(foundBook);
-        };
-
-        fetchBookDetails();
-    }, [id]);
 
     const validationSchema = Yup.object({
-        book_name: Yup.string().max(200, 'Max 200 characters').required('Book name is required'),
-        author: Yup.string().max(200, 'Max 200 characters').required('author name is required'),
+        book_name: Yup.string().max(200, 'Max 200 characters').required('Listing name is required'),
+        author: Yup.string().max(200, 'Max 200 characters').required('Author name is required'),
         description: Yup.string().max(5000, 'Max 5000 characters').required('Description is required'),
     });
 
-    const submitFormData = async (values) => {
-
-        console.log(values)
+    const submitFormData = async (values: FormValues) => {
         try {
-            const response = await api.put(`/${id}`, {
-                id: id,
+            const response = await api.post('/', {
                 title: values.book_name,
                 author: values.author,
                 description: values.description,
             });
 
-            alert('Book Updated successfully!');
+            alert('Book added successfully!');
             navigate('/book_list');
-
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error submitting form data:', error.response?.data || error.message);
             alert('Error submitting form data.');
         }
     };
 
-    if (!book) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div className="add-book-container">
             <Formik
                 initialValues={{
-                    book_name: book.title,
-                    author: book.author,
-                    description: book.description,
+                    book_name: '',
+                    author: '',
+                    description: '',
                 }}
                 validationSchema={validationSchema}
                 onSubmit={(values) => submitFormData(values)}
             >
                 {() => (
                     <Form className="add-book-form">
-                        <div className="shine add-book-header"><p>Edit Book</p></div>
+                        <div className="shine add-book-header"><p>Add New Book</p></div>
 
                         <div className="row-field">
                             <label className="add-book-label">Book Title</label>
@@ -93,7 +76,9 @@ const EditBook = () => {
                         </div>
 
                         <div className="add-new-btn">
-                            <button type="submit" className="add-book-submit-button">Update</button>
+                            <button type="submit" className="add-book-submit-button">
+                                Add New
+                            </button>
                         </div>
                     </Form>
                 )}
@@ -102,4 +87,4 @@ const EditBook = () => {
     );
 };
 
-export default EditBook;
+export default AddnewBook;

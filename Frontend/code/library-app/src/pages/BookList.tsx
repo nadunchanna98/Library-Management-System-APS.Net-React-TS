@@ -4,49 +4,44 @@ import { useAuth } from '../context/AuthContext';
 import api from '../axiosConfig';
 import { Link } from 'react-router-dom';
 
-const BookList = () => {
-    const { books,fetchBookData } = useAuth();
-    const [books1, setBooks] = useState([]);
-    const [showFullDescription, setShowFullDescription] = useState({});
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    description: string;
+}
+
+const BookList: React.FC = () => {
+    const { books, fetchBookData } = useAuth();
+    const [books1, setBooks] = useState<Book[]>([]);
+    const [showFullDescription, setShowFullDescription] = useState<Record<number, boolean>>({});
 
     useEffect(() => {
         fetchBookData();
-        const sortedBooks = books.sort((a, b) => a.title.localeCompare(b.title));
+        const sortedBooks = [...books].sort((a, b) => a.title.localeCompare(b.title));
         setBooks(sortedBooks);
     }, [books]);
 
-    const editBookDetail = async (id) => {
-        try {
-            const response = await api.update(`/${id}`);
-        } catch (error) {
-            console.error('Error editing book details:', error);
-            throw error;
-        }
-    };
 
-    const deleteBookDetail = async (id) => {
+
+    const deleteBookDetail = async (id: number) => {
         try {
-            const response = await api.delete(`/${id}`);
-            console.log("response:", response.data);
-            setBooks(books1.filter(book => book.id !== id));
+            await api.delete(`/${id}`);
+            setBooks(books1.filter((book) => book.id !== id));
         } catch (error) {
             console.error('Error deleting book:', error);
             throw error;
         }
     };
 
-    const toggleDescription = (id) => {
+    const toggleDescription = (id: number) => {
         setShowFullDescription((prev) => ({
             ...prev,
-            [id]: !prev[id]
+            [id]: !prev[id],
         }));
     };
 
-    const handleEdit = (id) => {
-        editBookDetail(id);
-    };
-
-    const handleDelete = (id) => {
+    const handleDelete = (id: number) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this book?");
         if (confirmDelete) {
             deleteBookDetail(id);

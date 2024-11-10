@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, FC } from 'react';
 import { Link } from "react-router-dom";
 import { FaBars } from "react-icons/fa";
 import '../components/Navbar.css';
 
-const Navbar = () => {
-
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Navbar: FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -14,7 +13,7 @@ const Navbar = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
+        <Link to="/" className="navbar-link">
           Library Management System
         </Link>
 
@@ -23,7 +22,7 @@ const Navbar = () => {
         </button>
 
         <div className={`navbar-links ${isMenuOpen ? 'navbar-mobile-menu open' : ''}`}>
-          <Link to={"/add_new_book"} className="navbar-link">
+          <Link to="/listing_page" className="navbar-link">
             <span>Add New Book</span>
           </Link>
         </div>
@@ -33,7 +32,7 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="navbar-mobile-menu open">
           <div className="navbar-links">
-            <Link to={"/listing_page"} className="navbar-link">
+            <Link to="/listing_page" className="navbar-link">
               <span>Add New Book</span>
             </Link>
           </div>
